@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2epxoev6l3m8"]
+
+[ext_resource type="Texture2D" uid="uid://bom50anvsw5e5" path="res://World of Solaria Demo Pack Update 04/16x16/Tilesets/New/Solaria Demo Tiles.png" id="1_shxhf"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_unp3n"]
+texture = ExtResource("1_shxhf")
+5:6/0 = 0
+5:6/0/custom_data_0 = "Water"
+1:7/0 = 0
+1:7/0/custom_data_0 = "Grass"
+14:7/0 = 0
+14:7/0/custom_data_0 = "Ground"
+
+[sub_resource type="TileSet" id="TileSet_an4yt"]
+custom_data_layer_0/name = "Type"
+custom_data_layer_0/type = 4
+sources/2 = SubResource("TileSetAtlasSource_unp3n")
+
+[node name="Map" type="Node2D"]
+
+[node name="GroundLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_an4yt")
