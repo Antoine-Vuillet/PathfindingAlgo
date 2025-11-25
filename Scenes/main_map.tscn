@@ -18,23 +18,28 @@ tile_map_data = PackedByteArray("AAADAAEAAAABAAcAAAADAAIAAAABAAcAAAAAAAAAAAAAAAY
 tile_set = ExtResource("1_ka2pl")
 script = ExtResource("2_k5tye")
 
-[node name="AStar" type="CharacterBody2D" parent="." node_paths=PackedStringArray("tilemap")]
+[node name="AStar" type="CharacterBody2D" parent="." node_paths=PackedStringArray("tilemap", "predator")]
 position = Vector2(24, 24)
 script = ExtResource("4_tvgjd")
 tilemap = NodePath("../Layer0")
+grass = 10
+water = 10
+rock = 10
 algo = true
+predator = NodePath("../Dijkstra")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="AStar"]
 scale = Vector2(16, 16)
 mesh = SubResource("BoxMesh_tvgjd")
 
-[node name="Dijkstra" type="CharacterBody2D" parent="." node_paths=PackedStringArray("tilemap")]
-position = Vector2(24, 24)
+[node name="Dijkstra" type="CharacterBody2D" parent="." node_paths=PackedStringArray("tilemap", "prey")]
+position = Vector2(1100, 600)
 script = ExtResource("4_tvgjd")
 tilemap = NodePath("../Layer0")
 grass = 3
 water = 2
 rock = 1
+prey = NodePath("../AStar")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Dijkstra"]
 scale = Vector2(16, 16)
