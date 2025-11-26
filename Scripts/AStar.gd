@@ -1,6 +1,6 @@
 class_name AStar
 
-static func find_path(tilemap: TileMapLayer, start: Vector2i,enemy:Vector2i, goal: Vector2i, get_cost_fn: Callable) -> Array:
+static func find_path(tilemap: TileMapLayer, start: Vector2i, goal: Vector2i, get_cost_fn: Callable, danger:Vector2i = Vector2i(-100, -100)) -> Array:
 	var open_set: Dictionary = { start: 0 }
 	var cost_so_far: Dictionary = { start: 0 }
 	var came_from: Dictionary = { start: null }
@@ -24,10 +24,11 @@ static func find_path(tilemap: TileMapLayer, start: Vector2i,enemy:Vector2i, goa
 			if not cost_so_far.has(neighbor) or new_cost < cost_so_far[neighbor]:
 				cost_so_far[neighbor] = new_cost
 				came_from[neighbor] = current
-				
-				var danger : int = floor(10000/(_manhattan_distance(neighbor,enemy)+1)^2)
+				var danger_distance : int = 0
+				if(danger != Vector2i(-100,-100)):
+					danger_distance = floor(10000/(_manhattan_distance(neighbor,danger)+1)^2)
 				var heuristic : int = _manhattan_distance(neighbor, goal)
-				open_set[neighbor] = new_cost + heuristic + danger
+				open_set[neighbor] = new_cost + heuristic + danger_distance
 	
 	return []
 

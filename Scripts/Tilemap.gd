@@ -1,6 +1,5 @@
 extends TileMapLayer
 
-
 func get_terrain(cell: Vector2i) -> String:
 	var data = get_cell_tile_data(cell)
 	if data == null:
