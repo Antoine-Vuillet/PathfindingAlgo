@@ -9,7 +9,6 @@ extends CharacterBody2D
 
 # Starting and goal tiles in map coordinates
 @export var goal_tile: Vector2i = Vector2i(70, 39)
-@export var algo : bool = false
 @export var predator : CharacterBody2D
 @export var prey : CharacterBody2D
 @export var predCd: float = 1
@@ -29,28 +28,15 @@ func _ready():
 		"Rock": rock
 	}
 	var enemy_pos
+	var current_tile = tilemap.local_to_map(global_position)
 	if(predator):
 		enemy_pos = tilemap.local_to_map(predator.position)
+		path = AStar.find_path(tilemap,current_tile,enemy_pos,goal_tile,func(t): return _terrain_cost(t))
 	if(prey):
 		enemy_pos = tilemap.local_to_map(prey.position)
-	var current_tile = tilemap.local_to_map(global_position)
-	if(algo):
-		path = AStar.find_path(
-		tilemap,
-		current_tile,
-		enemy_pos,
-		goal_tile,
-		func(t): return _terrain_cost(t))
-	else:
-		path = Dijkstra.find_path(
-		tilemap,
-		current_tile,
-		enemy_pos,
-		func(t): return _terrain_cost(t)
-		)
+		path = Dijkstra.find_path(tilemap,current_tile,enemy_pos,func(t): return _terrain_cost(t))
 	path_index = 0
 
-	# Set character initial position to start_tile
 	global_position = tilemap.map_to_local(current_tile)
 
 func _terrain_cost(terrain: String) -> int:
@@ -61,16 +47,19 @@ func _physics_process(delta):
 	var target_tile = tilemap.local_to_map(mouse_pos)
 	var enemy_pos
 	var current_tile = tilemap.local_to_map(global_position)
-	if(predator):
-		currCD = currCD- delta
-		if (currCD<=0):
+	if predator:
+		currCD -= delta
+		var at_tile_center := global_position.distance_to(tilemap.map_to_local(current_tile)) < 8.0
+		if currCD <= 0 and at_tile_center:
+			print("Math")
 			enemy_pos = tilemap.local_to_map(predator.position)
-			var result = AStar.find_path(tilemap, current_tile,enemy_pos, target_tile, func(t): return _terrain_cost(t)) as Array[Vector2i]
+			var result = AStar.find_path(tilemap, current_tile, enemy_pos, target_tile, func(t): return _terrain_cost(t)) as Array[Vector2i]
 			currCD = predCd
 			if result:
-				path = result as Array[Vector2i]
+				path = result
 			else:
 				path = []
+			path_index = 0
 	if(prey):
 		enemy_pos = tilemap.local_to_map(prey.position)
 		if target_tile != last_target_tile:
@@ -81,10 +70,6 @@ func _physics_process(delta):
 			else:
 				path = []
 			path_index = 0
-		
-			
-		
-
 	if path.is_empty() or path_index >= path.size():
 		velocity = Vector2.ZERO
 		return

@@ -25,7 +25,6 @@ tilemap = NodePath("../Layer0")
 grass = 10
 water = 10
 rock = 10
-algo = true
 predator = NodePath("../Dijkstra")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="AStar"]
